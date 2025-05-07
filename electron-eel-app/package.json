@@ -1,0 +1,32 @@
+{
+  "name": "electron-eel-app",
+  "version": "1.0.0",
+  "description": "Aplicação integrando Electron com Python Eel",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "NODE_ENV=development electron .",
+    "build": "electron-builder"
+  },
+  "keywords": [
+    "electron",
+    "python",
+    "eel"
+  ],
+  "author": "Você",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.6.3"
+  },
+  "build": {
+    "appId": "com.electron.electron-eel-app",
+    "directories": {
+      "output": "dist"
+    },
+    "extraResources": [{
+      "from": "python",
+      "to": "app/python"
+    }]
+  }
+}

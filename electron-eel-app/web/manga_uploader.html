@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploader de Mangás v2.5</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="manga_uploader.css">
+    <script type="text/javascript" src="/eel.js"></script>
+</head>
+<body class="dark-theme">
+    <div class="container">
+        <header>
+            <h1>Uploader de Mangás v2.5</h1>
+        </header>
+        
+        <div class="uploader-content">
+            <!-- Área de arquivos -->
+            <div class="file-section">
+                <div class="action-buttons">
+                    <button id="add-files-button">Add Arquivos</button>
+                    <button id="add-pasta-button">Add Pasta</button>
+                    <div class="filter-container">
+                        <input type="text" id="filter-input" placeholder="extensões ou regex">
+                        <button id="aplicar-button">Aplicar</button>
+                    </div>
+                </div>
+                
+                <div class="file-table-container">
+                    <table id="file-table">
+                        <thead>
+                            <tr>
+                                <th>Arquivo / Capítulo / Mangá</th>
+                                <th>Tamanho</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="file-list">
+                            <!-- Arquivos serão adicionados dinamicamente aqui -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="file-controls">
+                    <button id="marcar-todos">Marcar Todos</button>
+                    <button id="desmarcar-todos">Desmarcar Todos</button>
+                    <button id="remover-button">Remover</button>
+                    <button id="limpar-button">Limpar</button>
+                    <span id="selection-info">Sel: 0 / Total: 0</span>
+                </div>
+            </div>
+            
+            <!-- Área de configuração -->
+            <div class="config-section">
+                <h2>Configurações & Metadados</h2>
+                
+                <div class="tabs">
+                    <button class="tab-button active" data-tab="metadados">Metadados</button>
+                    <button class="tab-button" data-tab="host">Host</button>
+                    <button class="tab-button" data-tab="configuracoes">Configurações</button>
+                    <button class="tab-button" data-tab="logs">Logs</button>
+                </div>
+                
+                <!-- Conteúdo das abas -->
+                <div class="tab-content active" id="metadados-content">
+                    <h3>Metadados do Mangá</h3>
+                    
+                    <div class="form-group">
+                        <label for="titulo-manga">Título do Mangá:</label>
+                        <input type="text" id="titulo-manga" placeholder="Nome do mangá">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="titulos-alternativos">Títulos Alternativos:</label>
+                        <input type="text" id="titulos-alternativos" placeholder="Outros nomes do mangá, separados por vírgula">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="descricao">Descrição:</label>
+                        <textarea id="descricao" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="autor">Autor:</label>
+                        <input type="text" id="autor" placeholder="Nome do autor">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="artista">Artista:</label>
+                        <input type="text" id="artista" placeholder="Nome do artista/ilustrador">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="grupo-scan">Grupo de Scan:</label>
+                        <input type="text" id="grupo-scan">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="url-capa">URL da Capa:</label>
+                        <input type="text" id="url-capa" placeholder="Link para imagem de capa">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status">Status:</label>
+                        <input type="text" id="status" placeholder="Finalizado">
+                    </div>
+                    
+                    <h3>Metadados do Capítulo</h3>
+                    <div class="form-group">
+                        <label for="titulo-capitulo">Título do Capítulo:</label>
+                        <input type="text" id="titulo-capitulo" placeholder="Capítulo 1: Capítulo01">
+                    </div>
+                    
+                    <div class="actions">
+                        <button id="preencher-automaticamente">Preencher Campos Automaticamente</button>
+                        <button id="limpar-campos">Limpar Todos os Campos</button>
+                        <button id="salvar-metadados" class="primary-button">Salvar Metadados do Mangá</button>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="host-content">
+                    <!-- Conteúdo da aba Host será adicionado mais tarde -->
+                </div>
+                
+                <div class="tab-content" id="configuracoes-content">
+                    <div class="form-group">
+                        <label for="github-username">Usuário do GitHub:</label>
+                        <input type="text" id="github-username" placeholder="Seu nome de usuário do GitHub">
+                    </div>
+                    <div class="form-group">
+                        <label for="github-token">Token de Acesso Pessoal:</label>
+                        <input type="password" id="github-token" placeholder="Seu token de acesso pessoal">
+                    </div>
+                    <div class="form-group">
+                        <label for="github-repo">Repositório:</label>
+                        <input type="text" id="github-repo" placeholder="Nome do repositório">
+                    </div>
+                    <div class="form-group">
+                        <label for="github-branch">Branch:</label>
+                        <input type="text" id="github-branch" placeholder="Nome da branch (ex: main)">
+                    </div>
+                    <div class="actions">
+                        <button id="salvar-config-github" class="primary-button">Salvar Configurações do GitHub</button>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="logs-content">
+                    <div id="logs-area"></div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <button id="upload-button" class="primary-button">Upload e Atualizar GitHub</button>
+            <button id="urls-button">URLs Salvas</button>
+            <button id="titulos-button">Títulos Salvos</button>
+        </footer>
+    </div>
+
+    <script src="manga_uploader.js"></script>
+</body>
+</html>

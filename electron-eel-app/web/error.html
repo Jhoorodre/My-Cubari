@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erro ao Iniciar</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #333;
+        }
+        
+        .error-container {
+            padding: 2rem;
+            max-width: 600px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #e74c3c;
+        }
+        
+        .error-icon {
+            font-size: 4rem;
+            color: #e74c3c;
+            margin: 1rem 0;
+        }
+        
+        p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .tip {
+            background-color: #fff;
+            border-left: 4px solid #3498db;
+            padding: 1rem;
+            text-align: left;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Erro ao Iniciar Aplicativo</h1>
+        <div class="error-icon">⚠️</div>
+        <p>Não foi possível iniciar o servidor Python necessário para o funcionamento do aplicativo.</p>
+        
+        <div class="tip">
+            <strong>Dicas para resolver o problema:</strong>
+            <ul>
+                <li>Verifique se o Python 3 está instalado em seu sistema</li>
+                <li>Certifique-se de que as bibliotecas necessárias (eel, psutil) estão instaladas</li>
+                <li>Verifique se a porta 8080 não está sendo usada por outra aplicação</li>
+            </ul>
+        </div>
+        
+        <p>Para mais detalhes, verifique o console de desenvolvimento ou logs do aplicativo.</p>
+        
+        <button onclick="window.location.reload()">Tentar Novamente</button>
+    </div>
+    
+    <script>
+        // Adicionar registros ao console para fins de depuração
+        console.error('Erro ao iniciar o servidor Python');
+    </script>
+</body>
+</html>

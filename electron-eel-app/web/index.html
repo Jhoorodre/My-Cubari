@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicação Electron + Python Eel</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="/eel.js"></script>
+</head>
+<body class="light-theme">
+    <div class="theme-toggle">
+        <button id="theme-button" title="Alternar tema claro/escuro">🌓</button>
+    </div>
+    
+    <div class="container">
+        <h1>Aplicação Electron + Python Eel</h1>
+        
+        <!-- Seção do visualizador de arquivos JSON -->
+        <div class="card">
+            <h2>Visualizador de Arquivos JSON Cubari</h2>
+            <div class="file-selector">
+                <select id="json-file-selector">
+                    <option value="">Selecione um arquivo JSON...</option>
+                </select>
+                <button id="load-json-button">Carregar</button>
+            </div>
+            <div class="json-container">
+                <pre id="json-content">Selecione um arquivo para visualizar seu conteúdo...</pre>
+            </div>
+        </div>
+        
+        <!-- Seção de Boas-vindas -->
+        <div class="card">
+            <h2>Integração Python-JavaScript</h2>
+            <div class="input-group">
+                <input type="text" id="name-input" placeholder="Digite seu nome">
+                <button id="send-button">Enviar</button>
+            </div>
+            <div id="response" class="response-area">
+                A resposta aparecerá aqui...
+            </div>
+        </div>
+        
+        <!-- Seção para calculadora -->
+        <div class="card">
+            <h2>Calculadora Python</h2>
+            <div class="input-group">
+                <input type="text" id="calc-input" placeholder="Ex: 2 + 2 * 5">
+                <button id="calc-button">Calcular</button>
+            </div>
+            <div id="calc-response" class="response-area">
+                O resultado aparecerá aqui...
+            </div>
+            <div class="button-group">
+                <button class="calc-key" data-value="+">+</button>
+                <button class="calc-key" data-value="-">-</button>
+                <button class="calc-key" data-value="*">×</button>
+                <button class="calc-key" data-value="/">÷</button>
+                <button class="calc-key" data-value="(">(</button>
+                <button class="calc-key" data-value=")">)</button>
+                <button class="calc-key" data-value="**">^</button>
+            </div>
+        </div>
+        
+        <!-- Seção para informações do sistema -->
+        <div class="card">
+            <h2>Informações do Sistema</h2>
+            <button id="system-info-button">Obter Informações do Sistema</button>
+            <div class="system-info-container">
+                <div class="info-grid" id="system-info">
+                    <!-- Os dados do sistema serão exibidos aqui -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção para uploader de mangás -->
+        <div class="card">
+            <h2>Uploader de Mangás</h2>
+            <p>Ferramenta para fazer upload de mangás para o Catbox e gerar arquivos compatíveis com Cubari.</p>
+            <a href="manga_uploader.html" class="primary-button">Abrir Uploader de Mangás</a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
