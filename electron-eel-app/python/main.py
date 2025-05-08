@@ -15,8 +15,8 @@ from eel_interface.eel_exposed_functions import (
     selecionar_pasta_eel,
     listar_arquivos_pasta_eel,
     salvar_metadados_manga_eel,
-    salvar_config_github_eel,
-    load_config_github_eel,
+    save_github_config_eel, # MODIFICADO: salvar_config_github_eel -> save_github_config_eel
+    load_github_config_eel, # MODIFICADO: load_config_github_eel -> load_github_config_eel
     save_buzzheavier_config_eel,
     load_buzzheavier_config_eel,
     test_buzzheavier_connection_eel,

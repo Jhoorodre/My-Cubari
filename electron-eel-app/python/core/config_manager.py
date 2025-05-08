@@ -1,6 +1,19 @@
 import os
 import json
 
+# Diretório para armazenar configurações específicas de hosts
+HOST_CONFIG_DIR = "host_configs"
+
+# Função para garantir que o diretório de configuração do host exista
+def _ensure_host_config_dir():
+    if not os.path.exists(HOST_CONFIG_DIR):
+        os.makedirs(HOST_CONFIG_DIR)
+
+# Função para obter o caminho do arquivo de configuração de um host
+def _get_host_config_path(host_name):
+    _ensure_host_config_dir()
+    return os.path.join(HOST_CONFIG_DIR, f"{host_name}_config.json")
+
 # Função para carregar configurações do arquivo gerado pelo script batch
 def load_batch_config(config_file):
     config = {}
@@ -49,14 +62,37 @@ def save_github_config(username, token, repo_name, branch_name, config_file="git
 def load_github_config(config_file="github_config.json"):
     return load_config_from_file(config_file)
 
-# Funções específicas para config do Buzzheavier
-def save_buzzheavier_config_generic(config_data, config_file="buzzheavier_config.json"):
-    """Salva as configurações do Buzzheavier em um arquivo JSON."""
-    return save_config_to_file(config_data, config_file)
+# Funções para configurações de hosts específicos (Catbox, Buzzheavier, etc.)
+class ConfigManager:
+    @staticmethod
+    def save_host_config(host_name, config_data):
+        """Salva a configuração de um host específico em um arquivo JSON."""
+        config_file = _get_host_config_path(host_name)
+        return save_config_to_file(config_data, config_file)
 
-def load_buzzheavier_config_generic(config_file="buzzheavier_config.json"):
-    """Carrega as configurações do Buzzheavier de um arquivo JSON."""
-    return load_config_from_file(config_file)
+    @staticmethod
+    def load_host_config(host_name):
+        """Carrega a configuração de um host específico de um arquivo JSON."""
+        config_file = _get_host_config_path(host_name)
+        return load_config_from_file(config_file)
+
+    # Manter as funções específicas do GitHub por enquanto, ou decidir migrá-las
+    @staticmethod
+    def save_github_config(username, token, repo_name, branch_name, config_file="github_config.json"):
+        # Esta função pode ser mantida ou refatorada para usar save_host_config('github', data)
+        # Por simplicidade, vamos mantê-la por agora, mas idealmente seria bom unificar.
+        config_data = {
+            "username": username,
+            "token": token,
+            "repo_name": repo_name,
+            "branch_name": branch_name
+        }
+        return save_config_to_file(config_data, config_file) # Salva na raiz por enquanto
+
+    @staticmethod
+    def load_github_config(config_file="github_config.json"):
+        # Similarmente, esta função pode ser mantida ou refatorada.
+        return load_config_from_file(config_file) # Carrega da raiz por enquanto
 
 # Funções para config genérica (formato key=value)
 def load_generic_config(config_file):

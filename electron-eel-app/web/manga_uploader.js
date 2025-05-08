@@ -59,6 +59,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveBuzzHeavierConfigButton = document.getElementById('save-buzzheavier-config');
     const testBuzzHeavierConnectionButton = document.getElementById('test-buzzheavier-connection');
 
+    // --- Seletores para Catbox Host Configuration ---
+    const catboxUserhashInput = document.getElementById('catbox-userhash');
+    const saveCatboxConfigButton = document.getElementById('save-catbox-config');
+
     // --- Estado da Aplicação ---
     let currentFiles = []; // Array para armazenar os arquivos adicionados
 
@@ -424,6 +428,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- Lógica de Configurações do Catbox ---
+    if (saveCatboxConfigButton) {
+        saveCatboxConfigButton.addEventListener('click', async () => {
+            if (!eel || !catboxUserhashInput) return;
+            const userhash = catboxUserhashInput.value.trim();
+            // Não é obrigatório, então não validamos se está vazio
+            try {
+                await eel.save_catbox_config({ userhash: userhash })();
+                addLog('Configuração do Catbox salva.', 'success');
+            } catch (error) {
+                addLog(`Erro ao salvar configuração do Catbox: ${error}`, 'error');
+            }
+        });
+    }
+
+    async function loadCatboxConfig() {
+        if (!eel || !catboxUserhashInput) return;
+        try {
+            const config = await eel.load_catbox_config()();
+            if (config && typeof config.userhash !== 'undefined') {
+                catboxUserhashInput.value = config.userhash;
+                addLog('Configuração do Catbox carregada.', 'info');
+            }
+        } catch (e) {
+            addLog('Erro ao carregar configuração do Catbox.', 'error');
+        }
+    }
+
     // Modificar a função loadSavedHostConfigs para incluir Buzzheavier
     async function loadSavedHostConfigs() {
         // Carregar configurações do Github (já existente)
@@ -432,6 +464,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Carregar configurações do Buzzheavier
         await loadBuzzHeavierConfig();
         
+        // Carregar configurações do Catbox
+        await loadCatboxConfig();
+
         // Outras configurações de hosts
         // ...
     }
@@ -457,8 +492,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     fileVisibility: buzzHeavierFileVisibilitySelect ? buzzHeavierFileVisibilitySelect.value : 'public'
                 };
             case 'catbox':
-                // Retornar configurações do Catbox
-                return { type: 'catbox', userhash: '' }; // O userhash será preenchido no backend
+                return { 
+                    type: 'catbox', 
+                    userhash: catboxUserhashInput ? catboxUserhashInput.value : '' 
+                };
             // Outros casos para outros hosts podem ser adicionados aqui
             default:
                 return { type: 'catbox' }; // Host padrão

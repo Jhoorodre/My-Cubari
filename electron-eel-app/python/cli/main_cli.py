@@ -13,6 +13,7 @@ from core.config_manager import load_generic_config, save_generic_config, load_b
 from core.processing_logic import process_manga_chapter as core_process_manga_chapter
 from core.cubari_utils import save_json, save_yaml # Usar estas para salvar
 from core.file_system_utils import fs_natural_sort_key, fs_selecionar_pasta
+from api_clients.catbox_client import CatboxClient # Added import
 
 # === Configurações Globais (podem ser importadas de um arquivo de settings no futuro) ===
 # Estas são as mesmas que estavam em manga_uploader.py
@@ -75,6 +76,8 @@ def process_mangas_cli_interactive():
             print("Userhash não fornecido. Abortando.")
             return
 
+    catbox_client = CatboxClient(USERHASH_CLI) # Create CatboxClient instance
+
     manga_root_folder = fs_selecionar_pasta() # Pede ao usuário para selecionar a pasta raiz dos mangás
     if not manga_root_folder:
         print("Nenhuma pasta selecionada. Abortando.")
@@ -123,7 +126,7 @@ def process_mangas_cli_interactive():
             manga_root_folder, 
             manga_title, # Usar o título do mangá fornecido
             chapter_dir_name, 
-            USERHASH_CLI, 
+            catbox_client, # Pass CatboxClient instance
             ALBUM_TITLE_TEMPLATE_CLI, 
             ALBUM_DESCRIPTION_TEMPLATE_CLI, 
             MAX_WORKERS_CLI
