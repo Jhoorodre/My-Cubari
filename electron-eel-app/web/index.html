@@ -79,8 +79,22 @@
             <p>Ferramenta para fazer upload de mangás para o Catbox e gerar arquivos compatíveis com Cubari.</p>
             <a href="manga_uploader.html" class="primary-button">Abrir Uploader de Mangás</a>
         </div>
+
+        <!-- Seção para processamento de mangás Cubari -->
+        <div class="card">
+            <h2>Processar Mangás (Cubari)</h2>
+            <button id="process-manga-btn">Processar Mangás</button>
+            <pre id="process-manga-output"></pre>
+        </div>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        const themeButton = document.getElementById('theme-button');
+        themeButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            document.body.classList.toggle('light-theme');
+        });
+    </script>
 </body>
 </html>

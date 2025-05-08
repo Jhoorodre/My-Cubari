@@ -4,6 +4,12 @@
 echo "=== Configurando o ambiente para My-Cubari ==="
 echo ""
 
+# Adicionado suporte para Windows
+if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+    echo "Detectado Windows. Use setup.bat para configurar o ambiente."
+    exit 1
+fi
+
 # Verificar se Python está instalado
 if command -v python3 &>/dev/null; then
     echo "✅ Python encontrado"

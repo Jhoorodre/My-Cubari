@@ -4,159 +4,244 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uploader de Mangás v2.5</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="manga_uploader.css">
     <script type="text/javascript" src="/eel.js"></script>
 </head>
 <body class="dark-theme">
-    <div class="container">
-        <header>
-            <h1>Uploader de Mangás v2.5</h1>
-        </header>
-        
-        <div class="uploader-content">
-            <!-- Área de arquivos -->
-            <div class="file-section">
-                <div class="action-buttons">
-                    <button id="add-files-button">Add Arquivos</button>
-                    <button id="add-pasta-button">Add Pasta</button>
-                    <div class="filter-container">
-                        <input type="text" id="filter-input" placeholder="extensões ou regex">
-                        <button id="aplicar-button">Aplicar</button>
-                    </div>
-                </div>
-                
-                <div class="file-table-container">
-                    <table id="file-table">
-                        <thead>
-                            <tr>
-                                <th>Arquivo / Capítulo / Mangá</th>
-                                <th>Tamanho</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="file-list">
-                            <!-- Arquivos serão adicionados dinamicamente aqui -->
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div class="file-controls">
-                    <button id="marcar-todos">Marcar Todos</button>
-                    <button id="desmarcar-todos">Desmarcar Todos</button>
-                    <button id="remover-button">Remover</button>
-                    <button id="limpar-button">Limpar</button>
-                    <span id="selection-info">Sel: 0 / Total: 0</span>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="sidebar-title">Mangá Uploader</h1>
+            </div>
+            
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" data-view="upload" class="nav-link active"><i class="fa-solid fa-upload nav-icon"></i> Upload</a></li>
+                    <li><a href="#" data-view="configuracao" class="nav-link"><i class="fa-solid fa-gear nav-icon"></i> Configuração</a></li>
+                    <li><a href="#" data-view="log" class="nav-link"><i class="fa-solid fa-file-lines nav-icon"></i> Log</a></li>
+                    <li><a href="#" data-view="host" class="nav-link"><i class="fa-solid fa-cloud nav-icon"></i> Host</a></li>
+                </ul>
+            </nav>
+            
+            <div class="upload-queue-section">
+                <h2><i class="fa-solid fa-list-check"></i> Fila de Upload</h2>
+                <div class="queue-container">
+                    <ul id="upload-queue-list">
+                        <li>Naruto</li>
+                        <li>One Piece</li>
+                        <li>Bleach</li>
+                        <li>etc.</li>
+                    </ul>
                 </div>
             </div>
             
-            <!-- Área de configuração -->
-            <div class="config-section">
-                <h2>Configurações & Metadados</h2>
-                
-                <div class="tabs">
-                    <button class="tab-button active" data-tab="metadados">Metadados</button>
-                    <button class="tab-button" data-tab="host">Host</button>
-                    <button class="tab-button" data-tab="configuracoes">Configurações</button>
-                    <button class="tab-button" data-tab="logs">Logs</button>
-                </div>
-                
-                <!-- Conteúdo das abas -->
-                <div class="tab-content active" id="metadados-content">
-                    <h3>Metadados do Mangá</h3>
-                    
-                    <div class="form-group">
-                        <label for="titulo-manga">Título do Mangá:</label>
-                        <input type="text" id="titulo-manga" placeholder="Nome do mangá">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="titulos-alternativos">Títulos Alternativos:</label>
-                        <input type="text" id="titulos-alternativos" placeholder="Outros nomes do mangá, separados por vírgula">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="descricao">Descrição:</label>
-                        <textarea id="descricao" rows="3"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="autor">Autor:</label>
-                        <input type="text" id="autor" placeholder="Nome do autor">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="artista">Artista:</label>
-                        <input type="text" id="artista" placeholder="Nome do artista/ilustrador">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="grupo-scan">Grupo de Scan:</label>
-                        <input type="text" id="grupo-scan">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="url-capa">URL da Capa:</label>
-                        <input type="text" id="url-capa" placeholder="Link para imagem de capa">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="status">Status:</label>
-                        <input type="text" id="status" placeholder="Finalizado">
-                    </div>
-                    
-                    <h3>Metadados do Capítulo</h3>
-                    <div class="form-group">
-                        <label for="titulo-capitulo">Título do Capítulo:</label>
-                        <input type="text" id="titulo-capitulo" placeholder="Capítulo 1: Capítulo01">
-                    </div>
-                    
-                    <div class="actions">
-                        <button id="preencher-automaticamente">Preencher Campos Automaticamente</button>
-                        <button id="limpar-campos">Limpar Todos os Campos</button>
-                        <button id="salvar-metadados" class="primary-button">Salvar Metadados do Mangá</button>
-                    </div>
-                </div>
-                
-                <div class="tab-content" id="host-content">
-                    <!-- Conteúdo da aba Host será adicionado mais tarde -->
-                </div>
-                
-                <div class="tab-content" id="configuracoes-content">
-                    <div class="form-group">
-                        <label for="github-username">Usuário do GitHub:</label>
-                        <input type="text" id="github-username" placeholder="Seu nome de usuário do GitHub">
-                    </div>
-                    <div class="form-group">
-                        <label for="github-token">Token de Acesso Pessoal:</label>
-                        <input type="password" id="github-token" placeholder="Seu token de acesso pessoal">
-                    </div>
-                    <div class="form-group">
-                        <label for="github-repo">Repositório:</label>
-                        <input type="text" id="github-repo" placeholder="Nome do repositório">
-                    </div>
-                    <div class="form-group">
-                        <label for="github-branch">Branch:</label>
-                        <input type="text" id="github-branch" placeholder="Nome da branch (ex: main)">
-                    </div>
-                    <div class="actions">
-                        <button id="salvar-config-github" class="primary-button">Salvar Configurações do GitHub</button>
-                    </div>
-                </div>
-                
-                <div class="tab-content" id="logs-content">
-                    <div id="logs-area"></div>
-                </div>
-            </div>
-        </div>
-        
-        <footer>
-            <button id="upload-button" class="primary-button">Upload e Atualizar GitHub</button>
-            <button id="urls-button">URLs Salvas</button>
-            <button id="titulos-button">Títulos Salvos</button>
-        </footer>
-    </div>
+            <footer class="sidebar-footer">
+                <span id="download-status"><i class="fa-solid fa-circle-info"></i> Sem downloads em andamento</span>
+            </footer>
+        </aside>
 
+        <main class="content-area">
+            <header class="content-header">
+                <button class="back-button" id="back-button" style="display: none;"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 id="content-title">Upload</h2>
+                <div class="search-bar">
+                    <input type="search" id="content-search-input" placeholder="Buscar...">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                </div>
+            </header>
+
+            <div class="views-container">
+                <section id="view-upload" class="view active">
+                    <div class="upload-view-content">
+                        <div class="file-management-section">
+                            <div class="action-buttons">
+                                <button id="add-files-button" class="action-button"><i class="fa-solid fa-file-circle-plus"></i> Add Arquivos</button>
+                                <button id="add-pasta-button" class="action-button"><i class="fa-solid fa-folder-plus"></i> Add Pasta</button>
+                                <div class="filter-container">
+                                    <input type="text" id="filter-input" placeholder="extensões ou regex">
+                                    <button id="aplicar-button"><i class="fa-solid fa-filter"></i> Aplicar</button>
+                                </div>
+                            </div>
+                            <div class="file-table-container">
+                                <table id="file-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Arquivo / Capítulo / Mangá</th>
+                                            <th>Tamanho</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="file-list">
+                                        <!-- Placeholder for "MANGA UPANDO" items or actual files -->
+                                        <tr><td colspan="3">MANGA UPANDO 1</td></tr>
+                                        <tr><td colspan="3">MANGA UPANDO 2</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="file-controls">
+                                <button id="marcar-todos"><i class="fa-solid fa-check-double"></i> Marcar Todos</button>
+                                <button id="desmarcar-todos"><i class="fa-solid fa-xmark"></i> Desmarcar Todos</button>
+                                <button id="remover-button"><i class="fa-solid fa-trash"></i> Remover</button>
+                                <button id="limpar-button"><i class="fa-solid fa-broom"></i> Limpar</button>
+                                <span id="selection-info"><i class="fa-solid fa-info-circle"></i> Sel: 0 / Total: 0</span>
+                            </div>
+                        </div>
+                        <div class="metadata-section">
+                            <h3><i class="fa-solid fa-book"></i> Metadados do Mangá</h3>
+                            <div class="form-group">
+                                <label for="titulo-manga">Título do Mangá:</label>
+                                <input type="text" id="titulo-manga" placeholder="Nome do mangá">
+                            </div>
+                            <div class="form-group">
+                                <label for="titulos-alternativos">Títulos Alternativos:</label>
+                                <input type="text" id="titulos-alternativos" placeholder="Outros nomes do mangá, separados por vírgula">
+                            </div>
+                            <div class="form-group">
+                                <label for="descricao">Descrição:</label>
+                                <textarea id="descricao" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="autor">Autor:</label>
+                                <input type="text" id="autor" placeholder="Nome do autor">
+                            </div>
+                            <div class="form-group">
+                                <label for="artista">Artista:</label>
+                                <input type="text" id="artista" placeholder="Nome do artista/ilustrador">
+                            </div>
+                            <div class="form-group">
+                                <label for="grupo-scan">Grupo de Scan:</label>
+                                <input type="text" id="grupo-scan">
+                            </div>
+                            <div class="form-group">
+                                <label for="url-capa">URL da Capa:</label>
+                                <input type="text" id="url-capa" placeholder="Link para imagem de capa">
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Status:</label>
+                                <input type="text" id="status" placeholder="Finalizado">
+                            </div>
+                            <h3><i class="fa-solid fa-bookmark"></i> Metadados do Capítulo</h3>
+                            <div class="form-group">
+                                <label for="titulo-capitulo">Título do Capítulo:</label>
+                                <input type="text" id="titulo-capitulo" placeholder="Capítulo 1: Capítulo01">
+                            </div>
+                            <div class="actions">
+                                <button id="preencher-automaticamente"><i class="fa-solid fa-magic"></i> Preencher Automaticamente</button>
+                                <button id="limpar-campos"><i class="fa-solid fa-eraser"></i> Limpar Campos</button>
+                                <button id="salvar-metadados" class="primary-button"><i class="fa-solid fa-save"></i> Salvar Metadados</button>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="view-footer">
+                        <button id="upload-button" class="primary-button"><i class="fa-solid fa-cloud-arrow-up"></i> Upload e Atualizar GitHub</button>
+                        <button id="urls-button"><i class="fa-solid fa-link"></i> URLs Salvas</button>
+                        <button id="titulos-button"><i class="fa-solid fa-font"></i> Títulos Salvos</button>
+                    </footer>
+                </section>
+
+                <section id="view-configuracao" class="view">
+                    <div class="config-options-buttons">
+                        <button class="config-option-button active" data-config-target="github"><i class="fa-brands fa-github"></i> GITHUB</button>
+                        <button class="config-option-button" data-config-target="mongodb"><i class="fa-solid fa-database"></i> MONGO DB</button>
+                    </div>
+                    <div id="config-github" class="config-content active">
+                        <h3><i class="fa-brands fa-github"></i> Configuração GitHub</h3>
+                        <div class="form-group">
+                            <label for="github-username">Usuário do GitHub:</label>
+                            <input type="text" id="github-username" placeholder="Seu nome de usuário do GitHub">
+                        </div>
+                        <div class="form-group">
+                            <label for="github-token">Token de Acesso Pessoal:</label>
+                            <input type="password" id="github-token" placeholder="Seu token de acesso pessoal">
+                        </div>
+                        <div class="form-group">
+                            <label for="github-repo">Repositório:</label>
+                            <input type="text" id="github-repo" placeholder="Nome do repositório">
+                        </div>
+                        <div class="form-group">
+                            <label for="github-branch">Branch:</label>
+                            <input type="text" id="github-branch" placeholder="Nome da branch (ex: main)">
+                        </div>
+                        <div class="actions">
+                            <button id="salvar-config-github" class="primary-button"><i class="fa-solid fa-floppy-disk"></i> Salvar Configurações</button>
+                        </div>
+                    </div>
+                    <div id="config-mongodb" class="config-content">
+                        <h3><i class="fa-solid fa-database"></i> Configuração MongoDB</h3>
+                        <p>Configurações para MongoDB (ainda não implementado).</p>
+                        <!-- Add MongoDB settings form here -->
+                    </div>
+                </section>
+
+                <section id="view-log" class="view">
+                    <div class="log-display-title"><i class="fa-solid fa-terminal"></i> LOG</div>
+                    <div id="logs-area"></div>
+                </section>
+
+                <section id="view-host" class="view">
+                    <div class="host-tabs">
+                        <button class="host-tab-button active" data-host-tab="geral"><i class="fa-solid fa-sliders"></i> Geral</button>
+                        <button class="host-tab-button" data-host-tab="catbox"><i class="fa-solid fa-box"></i> Catbox</button>
+                        <button class="host-tab-button" data-host-tab="gdrive"><i class="fa-brands fa-google-drive"></i> Google Drive</button>
+                        <button class="host-tab-button" data-host-tab="buzzheavier"><i class="fa-solid fa-bolt"></i> Buzzheavier</button>
+                        <button class="host-tab-button" data-host-tab="dropbox"><i class="fa-brands fa-dropbox"></i> DropBox</button>
+                        <button class="host-tab-button" data-host-tab="gofile"><i class="fa-solid fa-file-export"></i> GoFile</button>
+                        <button class="host-tab-button" data-host-tab="pixeldrin"><i class="fa-solid fa-cloud-upload-alt"></i> Pixeldrain</button>
+                    </div>
+                    <div class="host-tab-content-container">
+                        <div class="host-tab-content active" id="host-tab-geral">
+                            <h3><i class="fa-solid fa-sliders"></i> Configurações Gerais</h3>
+                            <p>Configurações gerais do host.</p>
+                        </div>
+                        <div class="host-tab-content" id="host-tab-catbox">
+                            <h3><i class="fa-solid fa-box"></i> Configurações Catbox</h3>
+                            <p>Configurações do Catbox (ainda não implementado).</p>
+                        </div>
+                        <div class="host-tab-content" id="host-tab-gdrive">
+                            <h3><i class="fa-brands fa-google-drive"></i> Configurações Google Drive</h3>
+                            <p>Configurações do Google Drive.</p>
+                        </div>
+                        <div class="host-tab-content" id="host-tab-buzzheavier">
+                            <h3><i class="fa-solid fa-bolt"></i> Configurações Buzzheavier</h3>
+                            <div class="form-group">
+                                <label for="buzzheavier-api-key">API Key:</label>
+                                <input type="password" id="buzzheavier-api-key" placeholder="Sua chave de API do Buzzheavier">
+                            </div>
+                            <div class="form-group">
+                                <label for="buzzheavier-folder-id">ID da Pasta (opcional):</label>
+                                <input type="text" id="buzzheavier-folder-id" placeholder="ID da pasta para upload (opcional)">
+                            </div>
+                            <div class="form-group">
+                                <label for="buzzheavier-file-visibility">Visibilidade dos arquivos:</label>
+                                <select id="buzzheavier-file-visibility" class="form-select">
+                                    <option value="public">Público</option>
+                                    <option value="private">Privado</option>
+                                </select>
+                            </div>
+                            <div class="actions">
+                                <button id="save-buzzheavier-config" class="primary-button"><i class="fa-solid fa-floppy-disk"></i> Salvar Configurações</button>
+                                <button id="test-buzzheavier-connection" class="action-button"><i class="fa-solid fa-vial"></i> Testar Conexão</button>
+                            </div>
+                        </div>
+                        <div class="host-tab-content" id="host-tab-dropbox">
+                            <h3><i class="fa-brands fa-dropbox"></i> Configurações DropBox</h3>
+                            <p>Configurações do DropBox.</p>
+                        </div>
+                        <div class="host-tab-content" id="host-tab-gofile">
+                            <h3><i class="fa-solid fa-file-export"></i> Configurações GoFile</h3>
+                            <p>Configurações do GoFile.</p>
+                        </div>
+                        <div class="host-tab-content" id="host-tab-pixeldrin">
+                            <h3><i class="fa-solid fa-cloud-upload-alt"></i> Configurações Pixeldrain</h3>
+                            <p>Configurações do Pixeldrain.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
     <script src="manga_uploader.js"></script>
 </body>
 </html>

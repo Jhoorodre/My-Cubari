@@ -101,6 +101,15 @@ button:hover {
     background-color: var(--primary-hover);
 }
 
+button:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
 .response-area {
     background-color: var(--secondary-bg);
     border: 1px solid var(--border-color);
@@ -180,6 +189,11 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.3s;
+}
+
+.theme-toggle button:hover {
+    transform: rotate(20deg);
 }
 
 /* Estilos para o visualizador de JSON */

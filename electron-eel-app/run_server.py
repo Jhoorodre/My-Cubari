@@ -8,6 +8,16 @@ import sys
 import importlib.util
 import webbrowser
 from pathlib import Path
+import logging
+import argparse
+
+# Configuração de logs
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Argumentos de linha de comando
+parser = argparse.ArgumentParser(description="Iniciar o servidor Eel.")
+parser.add_argument('--port', type=int, default=8080, help="Porta para o servidor (padrão: 8080)")
+args = parser.parse_args()
 
 # Verifica se o Eel está instalado
 try:
@@ -28,19 +38,19 @@ eel.init(web_path)
 try:
     sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "python"))
     import main as python_main
-    print("Módulo Python importado com sucesso.")
+    logging.info("Módulo Python importado com sucesso.")
 except ImportError as e:
-    print(f"Erro ao importar módulo Python: {e}")
+    logging.error(f"Erro ao importar módulo Python: {e}")
     sys.exit(1)
 
 if __name__ == "__main__":
-    print("=" * 50)
-    print("Iniciando servidor Python Eel (sem Electron)")
-    print("=" * 50)
+    logging.info("=" * 50)
+    logging.info("Iniciando servidor Python Eel (sem Electron)")
+    logging.info("=" * 50)
     
     try:
-        print("Iniciando servidor na porta 8080...")
+        logging.info(f"Iniciando servidor na porta {args.port}...")
         # Inicia o servidor Eel
-        eel.start('index.html', mode='default', port=8080, host='localhost')
+        eel.start('index.html', mode='default', port=args.port, host='localhost')
     except Exception as e:
-        print(f"Erro ao iniciar o servidor: {e}")
+        logging.error(f"Erro ao iniciar o servidor: {e}")

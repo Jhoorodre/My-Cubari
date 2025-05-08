@@ -59,7 +59,26 @@
     <div class="splash-container">
         <h1>Electron + Python Eel</h1>
         <div class="loader"></div>
-        <p>Iniciando o aplicativo, por favor aguarde...</p>
+        <p id="progress-text">Iniciando o aplicativo, por favor aguarde...</p>
+        <div id="progress-bar" style="width: 100%; background-color: #ddd; height: 20px; border-radius: 10px; overflow: hidden; margin-top: 1rem;">
+            <div id="progress-bar-inner" style="width: 0; height: 100%; background-color: #3498db;"></div>
+        </div>
     </div>
+    <script>
+        let progress = 0;
+        const progressBar = document.getElementById('progress-bar-inner');
+        const progressText = document.getElementById('progress-text');
+
+        const interval = setInterval(() => {
+            progress += 10;
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `Carregando... ${progress}%`;
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                progressText.textContent = 'Pronto!';
+            }
+        }, 500);
+    </script>
 </body>
 </html>

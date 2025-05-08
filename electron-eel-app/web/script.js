@@ -256,6 +256,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // ======= Processamento de Mangás (Cubari) =======
+    const processMangaBtn = document.getElementById('process-manga-btn');
+    const processMangaOutput = document.getElementById('process-manga-output');
+
+    if (processMangaBtn) {
+        processMangaBtn.addEventListener('click', async function() {
+            processMangaOutput.textContent = "Processando, aguarde...";
+            try {
+                const result = await eel.rodar_manga_processor()();
+                if (result.success) {
+                    processMangaOutput.textContent = "Processamento concluído!\n\n" + (result.stdout || "");
+                } else {
+                    processMangaOutput.textContent = "Erro no processamento:\n" + (result.stderr || result.error || "");
+                }
+            } catch (err) {
+                processMangaOutput.textContent = "Erro ao executar processamento: " + err;
+            }
+        });
+    }
+    
     // Exibe mensagem indicando que a aplicação está pronta
     console.log("Interface web carregada com sucesso!");
 });
