@@ -45,7 +45,18 @@ fi
 # Criar ambiente virtual Python
 echo ""
 echo "=== Configurando ambiente virtual Python ==="
-$PYTHON_CMD -m venv env
+if [ ! -d "env" ]; then
+    echo "Criando ambiente virtual 'env'..."
+    $PYTHON_CMD -m venv env
+    if [ $? -ne 0 ]; then
+        echo "X Falha ao criar ambiente virtual."
+        exit 1
+    fi
+    echo "Ambiente virtual 'env' criado."
+else
+    echo "Ambiente virtual 'env' já existe."
+fi
+
 source env/bin/activate
 
 # Instalar dependências Python

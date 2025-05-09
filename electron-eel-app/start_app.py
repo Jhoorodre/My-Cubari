@@ -11,8 +11,11 @@ import platform
 import time
 import logging
 
-# Configuração de logs
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Configuração de logs com codificação UTF-8 explícita
+import codecs
+logging.basicConfig(level=logging.INFO, 
+                   format='%(asctime)s - %(levelname)s - %(message)s',
+                   handlers=[logging.StreamHandler(codecs.getwriter('utf-8')(sys.stdout.buffer))])
 
 def check_dependencies():
     """Verifica se todas as dependências estão instaladas"""

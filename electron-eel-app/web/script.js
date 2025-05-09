@@ -224,20 +224,20 @@ document.addEventListener('DOMContentLoaded', function() {
             "versao": "Versão",
             "arquitetura": "Arquitetura",
             "processador": "Processador",
-            "memoria_total": "Memória Total",
-            "memoria_disponivel": "Memória Disponível",
-            "cpu_uso": "Uso de CPU"
+            "memoria_total_gb": "Memória Total (GB)", // ATUALIZADO
+            "memoria_disponivel_gb": "Memória Disponível (GB)", // ATUALIZADO
+            "cpu_uso_percent": "Uso de CPU (%)" // ATUALIZADO
         };
         
-        return labels[key] || key;
+        return labels[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()); // Fallback mais genérico
     }
     
     // Função auxiliar para formatar os valores
     function formatValue(key, value) {
-        if (key === "memoria_total" || key === "memoria_disponivel") {
-            return `${value} GB`;
-        } else if (key === "cpu_uso") {
-            return `${value}%`;
+        if (key === "memoria_total_gb" || key === "memoria_disponivel_gb") { // ATUALIZADO
+            return `${value} GB`; // Python retorna string "XX.YY"
+        } else if (key === "cpu_uso_percent") { // ATUALIZADO
+            return `${value}%`; // Python retorna número
         } else {
             return value;
         }

@@ -4,13 +4,90 @@ import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm # ADICIONADO: Importar tqdm
 # from ..api_clients.github_client import GithubClient # Comentado ou a ser ajustado se necessário
-from api_clients.catbox_client import CatboxClient # MODIFICADO: .. -> .
-from api_clients.buzzheavier_client import upload_file_buzzheavier # MODIFICADO: .. -> .
+from ..api_clients.catbox_client import CatboxClient # MODIFICADO: . -> ..
+from ..api_clients.buzzheavier_client import upload_file_buzzheavier as core_upload_file_buzzheavier # MODIFICADO: . -> .. e renomeado para evitar conflito
 
 from .file_system_utils import natural_sort_key as fs_natural_sort_key
 
 # Configuração de logs para este módulo, se necessário, ou confiar no logging configurado no chamador.
 # logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+
+def _upload_single_file_for_batch(file_path, host_config, catbox_client_instance=None):
+    """Função auxiliar para fazer upload de um único arquivo com base na configuração do host."""
+    host_type = host_config.get("type", "catbox")
+    
+    if host_type == "catbox":
+        userhash = host_config.get("userhash")
+        if not userhash:
+            return file_path, None, "Userhash do Catbox não fornecido no host_config"
+        
+        # Usa a instância do cliente se fornecida, caso contrário, cria uma nova (menos eficiente para batch)
+        client_to_use = catbox_client_instance if catbox_client_instance else CatboxClient(userhash)
+        # O método upload_file da classe CatboxClient retorna um dicionário {"url": ..., "error": ...}
+        result = client_to_use.upload_file(file_path) 
+        return file_path, result.get("url"), result.get("error")
+
+    elif host_type == "buzzheavier":
+        api_key = host_config.get("apiKey")
+        folder_id = host_config.get("folderId")
+        is_public = host_config.get("fileVisibility", "public") == "public"
+        if not api_key:
+            return file_path, None, "API Key do Buzzheavier não fornecida no host_config"
+        
+        # A função core_upload_file_buzzheavier retorna url, error
+        url, error = core_upload_file_buzzheavier(file_path, api_key, folder_id, is_public)
+        return file_path, url, error
+    else:
+        return file_path, None, f"Tipo de host desconhecido: {host_type}"
+
+def upload_files_to_host_parallel(full_file_paths, host_config, max_workers=5):
+    """
+    Faz upload de uma lista de arquivos (caminhos completos) para o host especificado em paralelo.
+
+    Args:
+        full_file_paths (list): Lista de caminhos de arquivo completos.
+        host_config (dict): Dicionário de configuração do host. 
+                              Ex: {'type': 'catbox', 'userhash': 'xxxx'}
+                              Ex: {'type': 'buzzheavier', 'apiKey': 'yyyy', 'folderId': 'zz', 'fileVisibility': 'public'}
+        max_workers (int): Número máximo de threads de upload.
+
+    Returns:
+        list: Uma lista de dicionários, cada um representando o resultado do upload de um arquivo.
+              Ex: [{'path': '/path/to/img1.jpg', 'status': 'success', 'url': 'http://...'},
+                   {'path': '/path/to/img2.png', 'status': 'error', 'error': 'Falha no upload'}]
+    """
+    results = []
+    
+    # Para Catbox, é mais eficiente criar o cliente uma vez se todos os uploads forem para Catbox
+    catbox_client_instance = None
+    if host_config.get("type") == "catbox" and host_config.get("userhash"):
+        catbox_client_instance = CatboxClient(host_config["userhash"])
+
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        # Mapeia cada future para o seu caminho de arquivo original para fácil referência
+        future_to_path = {
+            executor.submit(_upload_single_file_for_batch, path, host_config, catbox_client_instance): path 
+            for path in full_file_paths
+        }
+        
+        # Usar tqdm para barra de progresso no console (útil para depuração do backend)
+        for future in tqdm(as_completed(future_to_path), total=len(full_file_paths), desc=f"Uploading to {host_config.get('type')}"):
+            original_path = future_to_path[future]
+            try:
+                _original_path_returned, url, error_msg = future.result() # _original_path_returned deve ser igual a original_path
+                if error_msg:
+                    results.append({'path': original_path, 'status': 'error', 'error': str(error_msg)})
+                    logger.error(f"Falha no upload de {original_path}: {error_msg}")
+                else:
+                    results.append({'path': original_path, 'status': 'success', 'url': url})
+                    logger.info(f"Sucesso no upload de {original_path}: {url}")
+            except Exception as exc:
+                results.append({'path': original_path, 'status': 'error', 'error': str(exc)})
+                logger.error(f"Exceção durante o upload de {original_path}: {exc}")
+                
+    return results
 
 def parallel_upload_files(image_file_names, chapter_path, catbox_client: CatboxClient, max_workers):
     """

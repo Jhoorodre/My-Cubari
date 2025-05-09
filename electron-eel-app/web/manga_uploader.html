@@ -19,9 +19,9 @@
             <nav class="main-nav">
                 <ul>
                     <li><a href="#" data-view="upload" class="nav-link active"><i class="fa-solid fa-upload nav-icon"></i> Upload</a></li>
-                    <li><a href="#" data-view="configuracao" class="nav-link"><i class="fa-solid fa-gear nav-icon"></i> Configuração</a></li>
-                    <li><a href="#" data-view="log" class="nav-link"><i class="fa-solid fa-file-lines nav-icon"></i> Log</a></li>
                     <li><a href="#" data-view="host" class="nav-link"><i class="fa-solid fa-cloud nav-icon"></i> Host</a></li>
+                    <li><a href="#" data-view="configuracao" class="nav-link"><i class="fa-solid fa-gear nav-icon"></i> Ajuste</a></li>
+                    <li><a href="#" data-view="log" class="nav-link"><i class="fa-solid fa-file-lines nav-icon"></i> Log</a></li>
                 </ul>
             </nav>
             
@@ -135,7 +135,7 @@
                         </div>
                     </div>
                     <footer class="view-footer">
-                        <button id="upload-button" class="primary-button"><i class="fa-solid fa-cloud-arrow-up"></i> Upload e Atualizar GitHub</button>
+                        <button id="upload-button" class="primary-button"><i class="fa-solid fa-cloud-arrow-up"></i> Iniciar Upload</button>
                         <button id="urls-button"><i class="fa-solid fa-link"></i> URLs Salvas</button>
                         <button id="titulos-button"><i class="fa-solid fa-font"></i> Títulos Salvos</button>
                     </footer>
@@ -170,8 +170,21 @@
                     </div>
                     <div id="config-mongodb" class="config-content">
                         <h3><i class="fa-solid fa-database"></i> Configuração MongoDB</h3>
-                        <p>Configurações para MongoDB (ainda não implementado).</p>
-                        <!-- Add MongoDB settings form here -->
+                        <div class="form-group">
+                            <label for="mongodb-uri">URI de Conexão:</label>
+                            <input type="text" id="mongodb-uri" placeholder="mongodb://usuario:senha@host:porta/database">
+                        </div>
+                        <div class="form-group">
+                            <label for="mongodb-database">Nome do Banco de Dados:</label>
+                            <input type="text" id="mongodb-database" placeholder="Nome do seu database">
+                        </div>
+                        <div class="form-group">
+                            <label for="mongodb-collection">Nome da Coleção:</label>
+                            <input type="text" id="mongodb-collection" placeholder="Nome da sua coleção">
+                        </div>
+                        <div class="actions">
+                            <button id="salvar-config-mongodb" class="primary-button"><i class="fa-solid fa-floppy-disk"></i> Salvar Configurações</button>
+                        </div>
                     </div>
                 </section>
 
@@ -207,7 +220,22 @@
                         </div>
                         <div class="host-tab-content" id="host-tab-gdrive">
                             <h3><i class="fa-brands fa-google-drive"></i> Configurações Google Drive</h3>
-                            <p>Configurações do Google Drive.</p>
+                            <div class="form-group">
+                                <label for="gdrive-client-id">Client ID:</label>
+                                <input type="text" id="gdrive-client-id" placeholder="Seu Client ID do Google Cloud">
+                            </div>
+                            <div class="form-group">
+                                <label for="gdrive-client-secret">Client Secret:</label>
+                                <input type="password" id="gdrive-client-secret" placeholder="Seu Client Secret do Google Cloud">
+                            </div>
+                            <div class="form-group">
+                                <label for="gdrive-folder-id">ID da Pasta de Upload (Opcional):</label>
+                                <input type="text" id="gdrive-folder-id" placeholder="ID da pasta no Google Drive para uploads">
+                            </div>
+                            <div class="actions">
+                                <button id="save-gdrive-config" class="primary-button"><i class="fa-solid fa-floppy-disk"></i> Salvar Configurações</button>
+                                <button id="auth-gdrive" class="action-button"><i class="fa-solid fa-key"></i> Autenticar com Google</button>
+                            </div>
                         </div>
                         <div class="host-tab-content" id="host-tab-buzzheavier">
                             <h3><i class="fa-solid fa-bolt"></i> Configurações Buzzheavier</h3>
@@ -233,15 +261,46 @@
                         </div>
                         <div class="host-tab-content" id="host-tab-dropbox">
                             <h3><i class="fa-brands fa-dropbox"></i> Configurações DropBox</h3>
-                            <p>Configurações do DropBox.</p>
+                            <div class="form-group">
+                                <label for="dropbox-app-key">App Key:</label>
+                                <input type="text" id="dropbox-app-key" placeholder="Sua App Key do Dropbox">
+                            </div>
+                            <div class="form-group">
+                                <label for="dropbox-app-secret">App Secret:</label>
+                                <input type="password" id="dropbox-app-secret" placeholder="Sua App Secret do Dropbox">
+                            </div>
+                            <div class="form-group">
+                                <label for="dropbox-access-token">Access Token (Gerado):</label>
+                                <input type="text" id="dropbox-access-token" placeholder="Será preenchido após autenticação" readonly>
+                            </div>
+                            <div class="actions">
+                                <button id="save-dropbox-config" class="primary-button"><i class="fa-solid fa-floppy-disk"></i> Salvar Configurações</button>
+                                <button id="auth-dropbox" class="action-button"><i class="fa-solid fa-key"></i> Autenticar com Dropbox</button>
+                            </div>
                         </div>
                         <div class="host-tab-content" id="host-tab-gofile">
                             <h3><i class="fa-solid fa-file-export"></i> Configurações GoFile</h3>
-                            <p>Configurações do GoFile.</p>
+                            <div class="form-group">
+                                <label for="gofile-api-key">API Key (Token):</label>
+                                <input type="password" id="gofile-api-key" placeholder="Sua API Key do GoFile">
+                            </div>
+                            <div class="form-group">
+                                <label for="gofile-folder-id">ID da Pasta de Destino (Opcional):</label>
+                                <input type="text" id="gofile-folder-id" placeholder="ID da pasta no GoFile para uploads">
+                            </div>
+                            <div class="actions">
+                                <button id="save-gofile-config" class="primary-button"><i class="fa-solid fa-floppy-disk"></i> Salvar Configurações</button>
+                            </div>
                         </div>
                         <div class="host-tab-content" id="host-tab-pixeldrin">
                             <h3><i class="fa-solid fa-cloud-upload-alt"></i> Configurações Pixeldrain</h3>
-                            <p>Configurações do Pixeldrain.</p>
+                             <div class="form-group">
+                                <label for="pixeldrain-api-key">API Key (Opcional):</label>
+                                <input type="password" id="pixeldrain-api-key" placeholder="Sua API Key do Pixeldrain (para uploads anônimos, deixe em branco)">
+                            </div>
+                            <div class="actions">
+                                <button id="save-pixeldrain-config" class="primary-button"><i class="fa-solid fa-floppy-disk"></i> Salvar Configurações</button>
+                            </div>
                         </div>
                     </div>
                 </section>
