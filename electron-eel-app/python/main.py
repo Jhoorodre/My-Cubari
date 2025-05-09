@@ -42,6 +42,11 @@ try:
         create_catbox_album_eel,
         save_catbox_config_eel,
         load_catbox_config_eel,
+        list_json_files_eel, # Renomeado de list_json_files para consistência
+        read_json_file_eel,  # Renomeado de read_json_file para consistência
+        get_system_info_eel, # Renomeado de get_system_info para consistência
+        process_chapter_eel, # Placeholder
+        rodar_manga_processor_eel # Placeholder, renomeado de rodar_manga_processor
     )
     logging.info("Funções Eel de 'python.eel_interface.eel_exposed_functions' importadas com sucesso.")
 except ImportError as e:
